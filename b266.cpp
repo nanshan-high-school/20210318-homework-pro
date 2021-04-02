@@ -39,17 +39,11 @@ int main() {
     }
     
     if(y % 2 != 0){ //最後有翻轉
-        int temp[a][a];
-		for(int i = 0; i < C; i++) {
-			for(int j = 0; j < R; j++) {
-				temp[R - (j + 1)][i] = rec[j][i];
-			}
-		}
-		for(int i = 0; i < R; i++) {
-			for(int j = 0; j < C; j++) {
-				rec[i][j] = temp[i][j];
-			}
-		}
+        for(int i = 0; i < (R / 2); i++){
+            for(int j = 0; j < C; j++){
+                swap(rec[i][j],rec[R - (i + 1)][j]);
+            }
+        }
     }
 
     for(int k = 0; k < z; k++){
