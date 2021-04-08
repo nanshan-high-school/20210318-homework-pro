@@ -1,0 +1,134 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+void turnR (int *m , int* res, int a, int b); // 順時針
+void turnL (int *m , int* res, int a, int b); // 逆時針
+void invert (int *m , int* res, int a, int b); // 翻轉
+
+int main() {
+    int row, column, num;
+    cin >> row >> column >> num;
+
+    int a = max(row, column);
+
+    int square1[row][column];
+    int square2[column][row];
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < column; j++) {
+            cin >> square1[i][j];
+        }
+    }
+
+    int control[num];
+    for (int i = 0; i < num; i++) {
+        cin >> control[i];
+    }
+
+    bool res = false;
+    bool source1 = true;
+    int total1 = 0;
+    int total2 = 0;
+    for (int i = num - 1; i >= 0; i--) {
+        if (control[i] == 0) {
+            if (res == false) { // 逆時針
+                if (source1 == true) {
+                    turnL(&square1[0][0], &square2[0][0], 
+                          row, column);
+                } else {
+                    turnL(&square2[0][0], &square1[0][0], 
+                          column, row);
+                }
+                total2 += 1;
+                source1 = !source1;
+            } else { // 順時針
+                if (source1 == true) {
+                    turnR(&square1[0][0], &square2[0][0], 
+                          row, column);
+                } else {
+                    turnR(&square2[0][0], &square1[0][0], 
+                          column, row);
+                }
+                total2 += 1;
+                source1 = !source1;
+            }         
+        } else if (control[i] == 1) { // 倒轉
+            res = !res;
+            total1 += 1;
+        }
+    }
+    
+    if (total1 % 2 != 0) {
+            if (source1 == true) {
+                int square3[row][column];
+                invert(&square1[0][0], &square3[0][0], 
+                   row, column);
+                cout << row << " " << column << "\n";
+                for (int i = 0; i < row; i++) {
+                    for (int j = 0; j < column; j++) {
+                        cout << square3[i][j];
+                        cout << " ";
+                    }
+                    cout << "\n";
+                }
+            } else {
+                int square3[column][row];
+                invert(&square2[0][0], &square3[0][0], 
+                   column, row);
+
+                cout << column << " " << row << "\n";
+                for (int i = 0; i < column; i++) {
+                    for (int j = 0; j < row; j++) {
+                        cout << square3[i][j];
+                        cout << " ";
+                    }
+                    cout << "\n";
+                }
+            }
+    } else {
+        if (source1 == true) {
+
+                cout << row << " " << column << "\n";
+                for (int i = 0; i < row; i++) {
+                    for (int j = 0; j < column; j++) {
+                        cout << square1[i][j];
+                        cout << " ";
+                    }
+                    cout << "\n";
+                }
+            } else {
+
+                cout << column << " " << row << "\n";
+                for (int i = 0; i < column; i++) {
+                    for (int j = 0; j < row; j++) {
+                        cout << square2[i][j];
+                        cout << " ";
+                    }
+                    cout << "\n";
+                }
+            }
+    }
+}
+
+void turnR (int *m, int* res, int a, int b) { // 順時針
+    for (int i = 0; i < b; i++) {
+        for (int j = 0; j < a; j++) {
+            *(res + i * a + j) = *(m + (a - 1 - j) * b + i);
+        }
+    }
+}
+
+void turnL (int *m , int* res, int a, int b) { // 逆時針
+    for (int i = 0; i < b; i++) {
+        for (int j = 0; j < a; j++) {
+            *(res + i * a + j) = *(m + (a * b - 1) - ((a - 1 - j) * b + i));
+        }
+    }
+}
+
+void invert (int *m , int* res, int a, int b) { // 翻轉
+    for (int i = 0; i < a; i++) {
+        for (int j = 0; j < b; j++) {
+            *(res + i * b + j) = *(m + (a - 1 - i) * b + j);
+        }
+    }
+}
